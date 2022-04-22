@@ -5,7 +5,7 @@ Email: wrj7887@163.com
 Author: Jeay
 Date: 2022-04-06 10:35:58
 LastEditors: Jeay
-LastEditTime: 2022-04-21 15:09:45
+LastEditTime: 2022-04-21 16:34:57
 jeay.net
 FilePath: /部署/httpserver.py
 Description: HTTP服务 基于flask
@@ -110,5 +110,5 @@ def add_task():
 
 # 运行flask
 if __name__ == '__main__':
-    app.debug = True
+    # app.debug = True
     app.run(host='0.0.0.0',port=config.port)
