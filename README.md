@@ -3,7 +3,7 @@
  * @Author: Jeay
  * @Date: 2022-04-21 14:28:49
  * @LastEditors: Jeay
- * @LastEditTime: 2022-04-25 11:06:10
+ * @LastEditTime: 2022-04-25 11:32:01
  * jeay.net
  * @FilePath: \部署\README.md
  * @Description: 
@@ -19,7 +19,7 @@ easycython *.pyx
 git clone https://github.com/jeeaay/register_client.git .
 
 
-docker run -it -d -p 8808:8808 jeeaay/reg /bin/sh -c /app/service.sh
+docker run -it -d --name reg -p 8808:8808 jeeaay/reg /bin/sh -c /app/service.sh
 
 docker run -it -d pyx_web /bin/sh
 
