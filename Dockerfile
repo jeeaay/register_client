@@ -2,16 +2,21 @@ FROM python:3.10.4-alpine3.15
 
 WORKDIR /app
 
-RUN apk update\
-&& apk add --no-cache redis openrc\
-&& apk --no-cache --virtual .dependencies add gcc git g++ musl-dev libxslt-dev\
-&& touch /run/openrc/softlevel\
-&& COPY *.py .\
-&& COPY *.so .\
+COPY . .
+RUN chmod +x service.sh\
+&& apk update\
+&& apk --no-cache --virtual .dependencies add gcc g++\
+&& apk add --no-cache redis openrc supervisor\
 && pip install -r ./requirements.txt --no-cache-dir\
-&& echo '*/10    *       *       *       *       run-parts /etc/periodic/15min' >> /etc/crontabs/root\
+&& echo '*/10    *       *       *       *       /usr/local/bin/python /app/keepalive.py' >> /etc/crontabs/root\
 && crond\
+&& mkdir /run/openrc\
+&& touch /run/openrc/softlevel\
+&& openrc\
+&& mkdir /etc/supervisor.d\
 && ln -s /app/sup.ini /etc/supervisor.d/reg_client.ini\
-&& rc-service redis start\
 && rc-service supervisord start\
-&& rm -rf .dependencies
+&& rc-service redis start\
+&& apk del .dependencies\
+&& rm -rf ./requirements.txt\
+# CMD [ "/bin/sh /app/service.sh" ]

@@ -5,14 +5,14 @@ Email: wrj7887@163.com
 Author: Jeay
 Date: 2022-04-06 10:35:58
 LastEditors: Jeay
-LastEditTime: 2022-04-21 16:34:57
+LastEditTime: 2022-04-25 09:59:28
 jeay.net
-FilePath: /部署/httpserver.py
+FilePath: \client\httpserver.py
 Description: HTTP服务 基于flask
 Copyright (c) 2022 by jeay.net, All Rights Reserved.
 '''
 from http import server
-import os
+import os, json
 
 # 引入flask
 from flask import Flask, jsonify, request
@@ -54,7 +54,7 @@ def index():
     # 未安装，提示安装信息
     # 写入服务器地址
     if not config.server:
-        server_url = 'https://d.lmzg.com'
+        server_url = 'https://d.lmzg.org'
         # server_url = 'http://127.0.0.1:5678'
         config.write_config({'server': server_url})
     # 获取服务端公钥
@@ -86,6 +86,30 @@ def getkey():
     # print(aeskey)
     return jsonify({'errno': 200, 'data': aeskey})
 
+
+
+# 返回远程日志
+@app.route('/getlogs/', methods=['POST','GET'])
+def getlogs():
+    # 获取GET数据
+    # print(request.args)
+    errno = request.args.get('errno', default=None)
+    if errno == None or errno != '200':
+        return jsonify({'errno': 404, 'data': '请求错误'})
+    data = request.args.get('data', default=None)
+    if data == None or data.strip() == '':
+        return jsonify({'errno': 404, 'data': '缺少data'})
+    uid = request.args.get('uid', default=None)
+    if uid == None or uid.strip() == '':
+        return jsonify({'errno': 404, 'data': '缺少uid'})
+    rmt = Remote()
+    offset = request.args.get('offset', default=0)
+    count = request.args.get('count', default=20)
+    res = rmt.sendLog(data, uid, offset, count)
+    # print(res)
+    return jsonify({'errno': 200, 'data': res})
+
+
 # robots.txt
 @app.route('/robots.txt')
 def robots():
@@ -110,5 +134,5 @@ def add_task():
 
 # 运行flask
 if __name__ == '__main__':
-    # app.debug = True
+    app.debug = True
     app.run(host='0.0.0.0',port=config.port)
