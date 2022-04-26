@@ -23,7 +23,7 @@ class CheckAlive:
         if int(last_log_time) + 600 > int(time.time()):
             self.rh.setlog("检查系统运行情况：最后一次日志时间 {} ，系统运行正常".format(logtime))
         else:
-            self.rh.setlog(os.system("/usr/bin/supervisorctl restart reg_client"))
+            self.rh.setlog(os.system("/usr/bin/supervisorctl restart reg"))
             self.rh.setlog("检查系统运行情况：距离最后一次日志时间 {} 超过十分钟，已重启注册主进程".format(logtime))
 
 if __name__ == "__main__":
