@@ -5,7 +5,7 @@ Email: wrj7887@163.com
 Author: Jeay
 Date: 2022-04-06 10:35:58
 LastEditors: Jeay
-LastEditTime: 2022-04-25 09:59:28
+LastEditTime: 2022-04-26 11:01:35
 jeay.net
 FilePath: \client\httpserver.py
 Description: HTTP服务 基于flask
@@ -61,7 +61,6 @@ def index():
     if not config.pubkey:
         try:
             res = requests.get(f'{config.server}/client_msg/getpubkey')
-            # print(res)
             res = res.json()
         except:
             return '<h1>服务器连接失败，可能是配置文件中的服务器地址错误</h1>'
@@ -83,10 +82,7 @@ def getkey():
     # 加密密钥
     res_crypt = Rsa()
     aeskey = res_crypt.encrypt(aeskey, pubkey)
-    # print(aeskey)
     return jsonify({'errno': 200, 'data': aeskey})
-
-
 
 # 返回远程日志
 @app.route('/getlogs/', methods=['POST','GET'])
